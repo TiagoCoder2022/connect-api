@@ -16,12 +16,9 @@ const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
-// Quando for configurar para o cors produção
-// app.register(fastifyCors, {
-//     origin: 'http://localhost:3000',
-// })
-
-app.register(fastifyCors)
+app.register(fastifyCors, {
+  origin: env.CORS_ORIGIN,
+})
 
 app.register(fastifySwagger, {
     openapi: {
@@ -44,6 +41,6 @@ app.register(getSubscriberInvitesCountRoute)
 app.register(getSubscriberRankingPositionRoute)
 app.register(getRankingRoute)
 
-app.listen({port: env.PORT }).then(() => {
-    console.log("HTTP server running")
+app.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
+  console.log(`Server is running on port ${env.PORT}`)
 })

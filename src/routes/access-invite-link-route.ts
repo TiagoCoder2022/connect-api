@@ -22,9 +22,15 @@ export const accessInviteLinkRoute: FastifyPluginAsyncZod = async app => {
         async (request, reply) => {
             const { subscriberId } = request.params
 
-            await accessInviteLink({ subscriberId })            
+            await accessInviteLink({ subscriberId })
+            
+            if (!env.CORS_ORIGIN) {
+              throw new Error(
+                'CORS_ORIGIN is not defined. Set it in your environment variables.'
+              )
+            }
 
-            const redirectUrl = new URL(env.WEB_URL)
+            const redirectUrl = new URL(env.CORS_ORIGIN)
 
             redirectUrl.searchParams.set('referrer', subscriberId)
 
